@@ -18,7 +18,8 @@ async function poll(){
  else out.forEach(o=>{if(JSON.stringify(o)!==JSON.stringify(S[o.id])){S[o.id]=o;emit("airportUpdate",null,o)}});
 }
 window.IDS_CONN={on:(n,f)=>(H[n]=H[n]||[]).push(f),onclose(){},onreconnecting(){},onreconnected(){},
- async start(){emit("connected");await poll();setInterval(poll,(C().data.poll_seconds||60)*1e3)},
+ async start(){if(this.s)return;this.s=1;emit("connected");await poll();setInterval(poll,(C().data.poll_seconds||60)*1e3)},
  patch(id,r){const l=LS();l[id]=Object.assign(l[id]||{},r);if("atis"in r)l[id].atis_time=new Date();if("arrival_atis"in r)l[id].arrival_atis_time=new Date();localStorage.setItem("ids_local",JSON.stringify(l));S[id]=Object.assign(S[id]||mk(id),l[id]);emit("airportUpdate",null,S[id])},
  pirep(p){emit("pirepUpdate",p)}};
+const w=setInterval(()=>{if(H.airports&&H.connected&&H.airportUpdate){clearInterval(w);window.IDS_CONN.start()}},100);
 })();
