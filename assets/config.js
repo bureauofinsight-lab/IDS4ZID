@@ -3,7 +3,7 @@
 const hrs=(o,c)=>({continuous:false,schedule:[{start:{month:1,day:1},end:{month:12,day:31},open:o,close:c,local:true}]});
 const def={
  ids_api_base_url:"",ids_base_url:"",
- data:{vnas_feed:"https://live.env.vnas.vatsim.net/data-feed/controllers.json",metar_url:"https://aviationweather.gov/api/data/metar",poll_seconds:60,logo:"assets/logo.png"},
+ data:{vnas_feed:"https://live.env.vnas.vatsim.net/data-feed/controllers.json",metar_url:"https://aviationweather.gov/api/data/metar",vatsim_feed:"https://data.vatsim.net/v3/vatsim-data.json",charts_cycle:"2611",poll_seconds:60,logo:"assets/logo.png"},
  subdivision:{name:"Indianapolis ARTCC",id:"ZID",update_flash_duration:16},
  timezone:{name:"America/Indiana/Indianapolis",offset:-5,offset_dst:-4},
  colors:{navbar:{facility:"#002766",ids:"#ffb612",clock_background:"#000000",clock_foreground:"#ffb612"},
@@ -11,9 +11,11 @@ const def={
   buttons:{SIA:{background:"bg-slate-800",hover:"bg-gray-700",foreground:"text-white"},WX:{background:"bg-blue-800",hover:"bg-blue-700",foreground:"text-white"},SOP:{background:"bg-green-800",hover:"bg-green-700",foreground:"text-white"},PIREPS:{background:"bg-yellow-800",hover:"bg-yellow-700",foreground:"text-white"},CHARTS:{background:"bg-purple-800",hover:"bg-purple-700",foreground:"text-white"},BRIEF:{background:"bg-rose-900",hover:"bg-rose-800",foreground:"text-white"},Login:{background:"bg-slate-800",hover:"bg-gray-700",foreground:"text-white"}}},
  weather:{"PRE-DUTY BRIEF":{videoUrl:"https://www.weather.gov/media/zid/ZIDPDWB.mp4"},
   "SATELLITE (GOES-19 CGL)":{images:[{title:"GeoColor",src:"https://cdn.star.nesdis.noaa.gov/GOES19/ABI/SECTOR/cgl/GEOCOLOR/1200x1200.jpg"},{title:"Clean IR",src:"https://cdn.star.nesdis.noaa.gov/GOES19/ABI/SECTOR/cgl/13/1200x1200.jpg"}]}},
+ charts_manual:[],
+ checklist:["## Weather","Current METAR / altimeter reviewed","ATIS letter and time confirmed","Winds, ceilings, visibility and trends","PIREPs and SIGMETs/AIRMETs reviewed","## Airport / Runways","Runways in use (dep/arr) and approaches active","Runway/taxiway closures and NOTAMs","Construction, snow removal or braking action","## Equipment","NAVAID / ILS / lighting status","Radar, radio and frequency status","## Traffic / Airspace","Current traffic and sequencing","Holds, delays, flow restrictions (TMU)","Active special use airspace / TFRs","Coordination in effect, LOAs and handoffs","## Position Administration","Adjacent positions / sectors and who is staffed","Frequencies and ATIS assignments confirmed","Briefing statement given: \"I am (initials), you are relieved\""],
  views:[{name:"KIND",default:true,facilities:["IND"],sops:"https://wiki.flyindycenter.com/"}],
  airports:[{name:"IND",icao:"KIND",mag_var:0,hours:{continuous:true}}]};
-let c=def;try{const s=JSON.parse(localStorage.getItem("ids_config")||"null");if(s)c=Object.assign({},def,s)}catch(e){}
+let c=def;try{const s=JSON.parse(localStorage.getItem("ids_config")||"null");if(s)c=Object.assign({},def,s);c.data=Object.assign({},def.data,c.data)}catch(e){}
 window.IDS_DEFAULT=def;window.IDS_HRS=hrs;window.IDS_CONFIG=c;
 document.title=c.subdivision.id+" IDS";
 })();

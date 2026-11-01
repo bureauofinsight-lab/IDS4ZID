@@ -13,9 +13,12 @@ async function poll(){
  const u=C().data.metar_url+"?format=json&ids="+list.map(icao).join(",");
  for(const f of [u,"https://api.allorigins.win/raw?url="+encodeURIComponent(u)]){try{const r=await fetch(f);(await r.json()).forEach(x=>m[x.icaoId]=x.rawOb);break}catch(e){console.warn("METAR source failed",f.slice(0,40))}}
  if(!Object.keys(m).length)for(const id of list){try{m[icao(id)]=(await(await fetch("https://metar.vatsim.net/"+icao(id))).text()).trim()}catch(e){}}
- let on=[];try{on=(await(await fetch(C().data.vnas_feed)).json()).controllers||[]}catch(e){console.warn("vNAS feed failed",e)}
- const out=list.map(id=>{const o=S[id]||mk(id),a=on.find(c=>(c.vatsimData?.callsign||"").startsWith(id+"_")&&/ATIS/.test(c.vatsimData.callsign));
-  const n=Object.assign({},o,mk(id),{metar:m[icao(id)]||o.metar||""});if(a&&!LS()[id]?.atis)n.atis=a.atis?.letter||a.vatsimData?.atisLetter||n.atis;return n});
+ let at=[];try{at=(await(await fetch(C().data.vatsim_feed||"https://data.vatsim.net/v3/vatsim-data.json")).json()).atis||[]}catch(e){console.warn("ATIS feed failed",e)}
+ const R="([0-9]{1,2}[LRC]?(?:\\s*(?:,|AND)\\s*[0-9]{1,2}[LRC]?)*)",RD=new RegExp("DEP(?:ARTURES?|G|ARTING)?\\s+(?:RWYS?|RUNWAYS?)\\s+"+R),RA=new RegExp("(?:LDG|LANDING|ARRIVALS?|ARRIVING|APCH|APPROACH)[A-Z ]{0,25}?\\s*(?:RWYS?|RUNWAYS?)\\s+"+R),cl=x=>x.replace(/\s*AND\s*/g,", ").replace(/\s+/g," ");
+ const out=list.map(id=>{const o=S[id]||mk(id),ic=icao(id),f=s=>at.find(x=>x.callsign===ic+s),c=f("_ATIS"),d=f("_D_ATIS"),ar=f("_A_ATIS"),n=Object.assign({},o,mk(id),{metar:m[icao(id)]||o.metar||""}),L=LS()[id]||{};
+  const dl=(d||c)?.atis_code,al=(ar||c)?.atis_code;if(dl){n.atis=dl;if(dl!==o.atis)n.atis_time=new Date()}if(al){n.arrival_atis=al;if(al!==o.arrival_atis)n.arrival_atis_time=new Date()}
+  const t=((d||c)?.text_atis||[]).join(" ").toUpperCase(),ta=((ar||c)?.text_atis||[]).join(" ").toUpperCase(),md=RD.exec(t),ma=RA.exec(ta);
+  if(md&&!L.departure_runways)n.departure_runways=cl(md[1]);if(ma&&!L.arrival_runways)n.arrival_runways=cl(ma[1]);return n});
  if(first){first=false;out.forEach(o=>S[o.id]=o);emit("airports",out)}
  else out.forEach(o=>{if(JSON.stringify(o)!==JSON.stringify(S[o.id])){S[o.id]=o;emit("airportUpdate",null,o)}});
 }
