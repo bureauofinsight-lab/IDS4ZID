@@ -11,8 +11,8 @@ let first=true;
 async function poll(){
  const list=ids(),m={};
  const u=C().data.metar_url+"?format=json&ids="+list.map(icao).join(",");
- for(const f of [u,"https://api.allorigins.win/raw?url="+encodeURIComponent(u)]){try{const r=await fetch(f);(await r.json()).forEach(x=>m[x.icaoId]=x.rawOb);break}catch(e){console.warn("METAR source failed",f.slice(0,40))}}
- if(!Object.keys(m).length)for(const id of list){try{m[icao(id)]=(await(await fetch("https://metar.vatsim.net/"+icao(id))).text()).trim()}catch(e){}}
+ await Promise.all(list.map(async id=>{try{const t=(await(await fetch("https://metar.vatsim.net/"+icao(id))).text()).trim();if(t&&t[0]!="<"&&t.length<700)m[icao(id)]=t}catch(e){}}));
+ if(!Object.keys(m).length&&!window.IDS_NOAWC){try{(await(await fetch(u)).json()).forEach(x=>m[x.icaoId]=x.rawOb)}catch(e){window.IDS_NOAWC=1}}
  let at=[];try{at=(await(await fetch(C().data.vatsim_feed||"https://data.vatsim.net/v3/vatsim-data.json")).json()).atis||[]}catch(e){console.warn("ATIS feed failed",e)}
  const R="([0-9]{1,2}[LRC]?(?:\\s*(?:,|AND)\\s*[0-9]{1,2}[LRC]?)*)",RD=new RegExp("DEP(?:ARTURES?|G|ARTING)?\\s+(?:RWYS?|RUNWAYS?)\\s+"+R),RA=new RegExp("(?:LDG|LANDING|ARRIVALS?|ARRIVING|APCH|APPROACH)[A-Z ]{0,25}?\\s*(?:RWYS?|RUNWAYS?)\\s+"+R),cl=x=>x.replace(/\s*AND\s*/g,", ").replace(/\s+/g," ");
  const out=list.map(id=>{const o=S[id]||mk(id),ic=icao(id),f=s=>at.find(x=>x.callsign===ic+s),c=f("_ATIS"),d=f("_D_ATIS"),ar=f("_A_ATIS"),n=Object.assign({},o,mk(id),{metar:m[icao(id)]||o.metar||""}),L=LS()[id]||{};

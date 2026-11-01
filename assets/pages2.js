@@ -1,4 +1,4 @@
-import{e as h}from"./index-zid2.js";
+import{e as h}from"./index-zid3.js";
 const C=()=>window.IDS_CONFIG,esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const icao=a=>a.icao||(a.name.length==3?"K"+a.name:a.name);
 const card="display:block;padding:10px 14px;margin:6px;background:#262626;border:1px solid #555;border-radius:6px;color:#fff;text-decoration:none";
@@ -20,9 +20,9 @@ charts(el){const cfg=C(),sel="padding:6px;background:#262626;color:#fff;border:1
  let D=null,ap=(cfg.airports[0]||{}).name||"",cur=null,q="",ty="ALL",all=false,msg="Loading charts…";
  const base=()=>`https://aeronav.faa.gov/d-tpp/${D&&D.cycle?D.cycle:(cfg.data.charts_cycle||"2611")}/`,rk=c=>ord.indexOf(c)<0?99:ord.indexOf(c);
  const merge=o=>{for(const m of cfg.charts_manual||[]){const k=(m.apt||"").toUpperCase(),a=o.airports[k]=o.airports[k]||{n:k,i:k,c:[]};a.c.push({c:"MAN",n:m.name,f:m.file})}return o};
- async function fb(){const cyc=cfg.data.charts_cycle||"2611",u=`https://aeronav.faa.gov/d-tpp/${cyc}/xml_data/d-TPP_Metafile.xml`;let x=null;for(const f of[u,"https://api.allorigins.win/raw?url="+encodeURIComponent(u)]){try{const r=await fetch(f);if(r.ok){x=await r.text();break}}catch(e){}}
+ async function fb(){const cyc=cfg.data.charts_cycle||"2611",u=`https://aeronav.faa.gov/d-tpp/${cyc}/xml_data/d-TPP_Metafile.xml`;let x=null;
   const o={cycle:cyc,airports:{}};if(x){const d=new DOMParser().parseFromString(x,"text/xml"),t=(e,n)=>e.getElementsByTagName(n)[0]?.textContent;for(const a of cfg.airports){const n=[...d.getElementsByTagName("airport_name")].find(e=>e.getAttribute("icao_ident")==icao(a)||e.getAttribute("apt_ident")==a.name);if(n)o.airports[a.name]={n:n.getAttribute("ID"),i:icao(a),c:[...n.getElementsByTagName("record")].map(e=>({c:t(e,"chart_code"),n:t(e,"chart_name"),f:t(e,"pdf_name")})).filter(z=>z.f)}}msg=""}
-  else msg="No chart list available yet. Set up the automatic chart index (see charts/README) or add charts by hand in ⚙ → Charts.";return merge(o)}
+  else msg="Chart index not built yet. Run the \"Update FAA charts index\" workflow in the GitHub Actions tab (see charts/README.txt), or add charts by hand in ⚙ → Charts.";return merge(o)}
  async function load(){try{const r=await fetch(new URL("charts/index.json",location.href.split("#")[0]).href+"?h="+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json();if(j&&j.airports&&Object.keys(j.airports).length){D=merge(j);msg=""}}}catch(e){}
   if(!D)D=await fb();draw()}
  const rows=()=>{const T=q.toUpperCase().split(/\s+/).filter(Boolean).map(t=>AL[t]||t),out=[];for(const k of all&&q?Object.keys(D.airports):[ap]){const a=D.airports[k];if(!a)continue;for(const c of a.c){if(ty!="ALL"&&c.c!=ty)continue;const h=(k+" "+(a.i||"")+" "+c.c+" "+c.n).toUpperCase();if(T.every(t=>h.includes(t)))out.push({...c,k})}}return out};
