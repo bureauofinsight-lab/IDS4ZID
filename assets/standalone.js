@@ -22,7 +22,7 @@ async function poll(){
  if(first){first=false;out.forEach(o=>S[o.id]=o);emit("airports",out)}
  else out.forEach(o=>{if(JSON.stringify(o)!==JSON.stringify(S[o.id])){S[o.id]=o;emit("airportUpdate",null,o)}});
 }
-window.IDS_CONN={on:(n,f)=>(H[n]=H[n]||[]).push(f),onclose(){},onreconnecting(){},onreconnected(){},
+window.IDS_S=S;window.IDS_CONN={on:(n,f)=>(H[n]=H[n]||[]).push(f),onclose(){},onreconnecting(){},onreconnected(){},
  async start(){if(this.s)return;this.s=1;emit("connected");await poll();setInterval(poll,(C().data.poll_seconds||60)*1e3)},
  patch(id,r){const l=LS();l[id]=Object.assign(l[id]||{},r);if("atis"in r)l[id].atis_time=new Date();if("arrival_atis"in r)l[id].arrival_atis_time=new Date();localStorage.setItem("ids_local",JSON.stringify(l));S[id]=Object.assign(S[id]||mk(id),l[id]);emit("airportUpdate",null,S[id])},
  pirep(p){emit("pirepUpdate",p)}};
