@@ -1,4 +1,4 @@
-import{e as h}from"./index-VWWDFYzH.js";
+import{e as h}from"./index-zid2.js";
 const C=()=>window.IDS_CONFIG,esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const icao=a=>a.icao||(a.name.length==3?"K"+a.name:a.name);
 const card="display:block;padding:10px 14px;margin:6px;background:#262626;border:1px solid #555;border-radius:6px;color:#fff;text-decoration:none";
