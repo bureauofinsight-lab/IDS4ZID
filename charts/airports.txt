@@ -1,3 +1,26 @@
-# Airports to include in the chart list. One per line: FAA or ICAO id (IND or KIND).
-# To include every airport in a state, use: STATE:IN   (several: STATE:IN,OH,KY)
+# Airports to include in the chart list. One FAA or ICAO id per line.
+# To include every airport in a state, add a line like: STATE:IN   (several: STATE:IN,OH,KY)
 IND
+2R2
+5I4
+81II
+8A4
+AID
+BAK
+CFJ
+EYE
+GEZ
+GPC
+HBE
+HFY
+I34
+I99
+IN35
+IN74
+IN84
+MIE
+MQJ
+OVO
+TYQ
+UMP
+UWL
