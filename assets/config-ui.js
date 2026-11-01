@@ -3,7 +3,7 @@
 const C=window.IDS_CONFIG,D=window.IDS_DEFAULT,$=(t,s,h)=>{const e=document.createElement(t);if(s)e.style.cssText=s;if(h!=null)e.innerHTML=h;return e};
 const fmt=h=>h.continuous?"24/7":(h.schedule&&h.schedule[0]?h.schedule[0].open+"-"+h.schedule[0].close:"24/7");
 const T={
-Facility:()=>({get:()=>[["Name","subdivision.name"],["ID","subdivision.id"],["Timezone (IANA)","timezone.name"],["UTC offset (standard)","timezone.offset"],["UTC offset (DST)","timezone.offset_dst"],["vNAS feed URL","data.vnas_feed"],["METAR URL","data.metar_url"],["Poll seconds","data.poll_seconds"],["Logo path/URL","data.logo"]]}),
+Facility:()=>({get:[["Name","subdivision.name"],["ID","subdivision.id"],["Timezone (IANA)","timezone.name"],["UTC offset (standard)","timezone.offset"],["UTC offset (DST)","timezone.offset_dst"],["vNAS feed URL","data.vnas_feed"],["METAR URL","data.metar_url"],["Poll seconds","data.poll_seconds"],["Logo path/URL","data.logo"]]}),
 Airports:()=>({txt:C.airports.map(a=>[a.name,a.icao||"",fmt(a.hours),a.mag_var||0].join(" | ")).join("\n"),help:"One per line: FAA id | ICAO | hours (24/7 or HH:MM-HH:MM local) | mag variation (+E/-W)"}),
 Views:()=>({txt:C.views.map(v=>[v.name,v.facilities.join(","),v.sops||"",v.default?"*":""].join(" | ")).join("\n"),help:"One per line: Name | FAA ids (comma) | SOP link | * for default (optional)"}),
 Weather:()=>({txt:JSON.stringify(C.weather,null,1),help:"JSON. Each tab: {videoUrl} or {images:[{title,src}]}"}),
