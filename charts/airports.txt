@@ -1,0 +1,3 @@
+# Airports to include in the chart list. One per line: FAA or ICAO id (IND or KIND).
+# To include every airport in a state, use: STATE:IN   (several: STATE:IN,OH,KY)
+IND
