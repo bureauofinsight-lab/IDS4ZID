@@ -1,0 +1,27 @@
+name: Update NOTAMs
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  push:
+    paths: ["notams/airports.txt"]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python notams/fetch_notams.py
+        env:
+          FAA_NOTAM_CLIENT_ID: ${{ secrets.FAA_NOTAM_CLIENT_ID }}
+          FAA_NOTAM_CLIENT_SECRET: ${{ secrets.FAA_NOTAM_CLIENT_SECRET }}
+      - run: |
+          git config user.name "notam-bot"
+          git config user.email "notam-bot@users.noreply.github.com"
+          git add notams/index.json
+          git diff --cached --quiet || git commit -m "Update NOTAMs"
+          git push

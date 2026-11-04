@@ -1,0 +1,25 @@
+# Airports to fetch NOTAMs for. One FAA id per line (IND, 2R2, ...).
+IND
+2R2
+5I4
+81II
+8A4
+AID
+BAK
+CFJ
+EYE
+GEZ
+GPC
+HBE
+HFY
+I34
+I99
+IN35
+IN74
+IN84
+MIE
+MQJ
+OVO
+TYQ
+UMP
+UWL
